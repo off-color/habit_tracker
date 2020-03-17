@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Привычки</string>
+    <string name="titleHint">Название</string>
+    <string name="descriptionHint">Описание</string>
+    <string name="priorityHint">Приоритет</string>
+    <string name="typeLabel">Тип</string>
+    <string name="good">Хорошая</string>
+    <string name="bad">Плохая</string>
+    <string name="countHint">Количество выполнения</string>
+    <string name="periodicityHint">Периодичность</string>
+    <string name="save">Сохранить</string>
+    <string name="editActivityLabel">Добавление/редактирование</string>
+    <string-array name="priorities">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+    <string name="countAndPeriodicity">%1$d %2$s, раз в %3$d %4$s</string>
+    <string name="goodorbad">goodOrBad</string>
+</resources>
