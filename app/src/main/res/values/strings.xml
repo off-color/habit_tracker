@@ -17,6 +17,18 @@
         <item>4</item>
         <item>5</item>
     </string-array>
-    <string name="countAndPeriodicity">%1$d %2$s, раз в %3$d %4$s</string>
+    <string name="countAndPeriodicity">%1$s, раз в %2$s</string>
+    <plurals name="countPlurals">
+        <item quantity="one">%1$d раз</item>
+        <item quantity="few">%1$d раза</item>
+        <item quantity="many">%1$d раз</item>
+        <item quantity="other">%1$d раз</item>
+    </plurals>
+    <plurals name="daysPlurals">
+        <item quantity="one">%1$d день</item>
+        <item quantity="few">%1$d дня</item>
+        <item quantity="many">%1$d дней</item>
+        <item quantity="other">%1$d дней</item>
+    </plurals>
     <string name="goodorbad">goodOrBad</string>
 </resources>
