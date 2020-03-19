@@ -26,6 +26,7 @@ class HabitsViewHolder(
                 habit.periodicity
             )
         )
+        descriptionView.text = habit.description
         typeIcon.setImageResource(
             if (habit.isGood) R.drawable.ic_sentiment_satisfied
             else R.drawable.ic_sentiment_dissatisfied
