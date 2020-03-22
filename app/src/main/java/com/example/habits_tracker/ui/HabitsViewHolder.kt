@@ -1,4 +1,4 @@
-package com.example.habits_tracker.application
+package com.example.habits_tracker.ui
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
@@ -27,10 +27,6 @@ class HabitsViewHolder(
             )
         )
         descriptionView.text = habit.description
-        typeIcon.setImageResource(
-            if (habit.isGood) R.drawable.ic_sentiment_satisfied
-            else R.drawable.ic_sentiment_dissatisfied
-        )
         priorityView.text = habit.priority.toString()
     }
 }

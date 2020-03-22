@@ -1,4 +1,4 @@
-package com.example.habits_tracker.application
+package com.example.habits_tracker.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

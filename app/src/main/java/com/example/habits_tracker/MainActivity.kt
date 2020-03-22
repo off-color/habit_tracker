@@ -1,55 +1,47 @@
 package com.example.habits_tracker
 
-import android.app.Activity
-import android.content.Intent
+import android.content.Context
 import android.os.Bundle
+import android.view.MenuItem
+import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
-import com.example.habits_tracker.application.Habit
-import com.example.habits_tracker.application.HabitsAdapter
-import com.example.habits_tracker.application.OnItemClickListener
+import com.example.habits_tracker.ui.Habit
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnSaveCallback, HabitsHolder {
 
     companion object {
-        const val ADD_REQUEST = 1
-        const val EDIT_REQUEST = 2
-        const val HABIT = "habit"
-        const val HABITS = "habits"
+        private const val HABITS = "habits"
+        private const val MAIN_FRAGMENT = "main_fragment"
     }
 
-    private var habits : MutableList<Habit> = mutableListOf()
-    private var editPosition : Int = 0
+    override var habits: MutableList<Habit> = mutableListOf()
+    private var drawerToggle: ActionBarDrawerToggle? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        fab.setOnClickListener {
-            Intent(this, EditActivity::class.java).run {
-                startActivityForResult(this, ADD_REQUEST)
-            }
-        }
+        configureNavigationDrawer()
 
-        configureRecyclerView()
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.fragmentHolder, MainFragment.newInstance(), MAIN_FRAGMENT).commit()
+        }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if ((requestCode == ADD_REQUEST || requestCode == EDIT_REQUEST) &&
-            resultCode == Activity.RESULT_OK && data != null) {
-            data.getParcelableExtra<Habit>(HABIT)?.run {
-                if (requestCode == ADD_REQUEST) {
-                    habits.add(this)
-                    habitsRecyclerView.adapter?.notifyItemInserted(habits.size - 1)
-                }
-                else {
-                    habits[editPosition] = this
-                    habitsRecyclerView.adapter?.notifyItemChanged(editPosition)
-                }
-            }
+    override fun onSave(habit: Habit, isModeAdd: Boolean, position: Int, initialHabit: Habit?) {
+        if (isModeAdd) {
+            habits.add(habit)
+        } else {
+            val indices =
+                habits.mapIndexed { index, h -> if (h.isGood == initialHabit?.isGood) index else null }
+                    .filterNotNull()
+            habits[indices[position]] = habit
         }
+        supportFragmentManager.popBackStack()
+        hideKeyboard()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -58,25 +50,72 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        habits = savedInstanceState.getParcelableArrayList<Habit>(HABITS) ?: mutableListOf()
-        configureRecyclerView()
+        habits = savedInstanceState.getParcelableArrayList(HABITS) ?: mutableListOf()
+        replaceToMainFragment()
         super.onRestoreInstanceState(savedInstanceState)
     }
 
-    private fun configureRecyclerView() {
-        habitsRecyclerView.adapter = HabitsAdapter(habits, object :
-            OnItemClickListener {
-            override fun onItemClick(habit: Habit, position: Int) {
-                editPosition = position
-                Intent(this@MainActivity, EditActivity::class.java).run {
-                    putExtra(EditActivity.HABIT, habit)
-                    startActivityForResult(this, EDIT_REQUEST)
-                }
-            }
-        })
-        val dividerItemDecoration = DividerItemDecoration(
-            habitsRecyclerView.context, DividerItemDecoration.VERTICAL)
-        dividerItemDecoration.setDrawable(resources.getDrawable(R.drawable.vertical_divider))
-        habitsRecyclerView.addItemDecoration(dividerItemDecoration)
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (drawerToggle?.onOptionsItemSelected(item) == true) {
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
+
+    private fun configureNavigationDrawer() {
+        drawerToggle = ActionBarDrawerToggle(
+            this,
+            navigationDrawerLayout,
+            R.string.openDrawer,
+            R.string.closeDrawer
+        ).apply {
+            navigationDrawerLayout.addDrawerListener(this)
+            syncState()
+        }
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        navigationDrawer.setNavigationItemSelectedListener {
+            onItemMenuSelect(it)
+        }
+    }
+
+    private fun onItemMenuSelect(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menuItemHome -> {
+                replaceToMainFragment()
+                navigationDrawerLayout.closeDrawers()
+                true
+            }
+
+            R.id.menuItemInfo -> {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentHolder, InfoFragment.newInstance())
+                    .commit()
+                navigationDrawerLayout.closeDrawers()
+                true
+            }
+
+            else -> false
+        }
+    }
+
+    private fun hideKeyboard() {
+        val view = currentFocus
+        if (view != null) {
+            val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputManager.hideSoftInputFromWindow(
+                view.windowToken,
+                InputMethodManager.HIDE_NOT_ALWAYS
+            )
+        }
+    }
+
+    private fun replaceToMainFragment() {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentHolder, MainFragment.newInstance(), MAIN_FRAGMENT)
+            .commit()
+    }
+}
+
+interface HabitsHolder {
+    var habits: MutableList<Habit>
 }

@@ -1,4 +1,4 @@
-package com.example.habits_tracker.application
+package com.example.habits_tracker.ui
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

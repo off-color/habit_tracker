@@ -31,4 +31,14 @@
         <item quantity="other">%1$d дней</item>
     </plurals>
     <string name="goodorbad">goodOrBad</string>
+    <string name="home">Домой</string>
+    <string name="info">Информация</string>
+    <string name="launchericon">launcherIcon</string>
+    <string name="version">Версия приложения: 0</string>
+    <string name="openDrawer">openDrawer</string>
+    <string name="closeDrawer">closeDrawer</string>
+    <string name="mailToLabel">Обратная связь</string>
+    <string name="email">ilya.vl.moskvin@gmail.com</string>
+    <string name="goods">Хорошие</string>
+    <string name="bads">Плохие</string>
 </resources>
