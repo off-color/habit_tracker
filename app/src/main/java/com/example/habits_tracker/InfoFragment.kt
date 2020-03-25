@@ -18,10 +18,6 @@ class InfoFragment : Fragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance() =
-            InfoFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
+        fun newInstance() = InfoFragment()
     }
 }

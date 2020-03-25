@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.habits_tracker.R
+import com.example.habits_tracker.application.Habit
 
 class HabitsAdapter(
     private val habits: List<Habit>, private val listener: OnItemClickListener

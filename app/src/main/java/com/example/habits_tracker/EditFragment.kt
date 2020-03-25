@@ -8,12 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.fragment.app.Fragment
-import com.example.habits_tracker.ui.Habit
+import com.example.habits_tracker.application.Habit
+import com.example.habits_tracker.ui.OnSaveCallback
 import kotlinx.android.synthetic.main.fragment_edit.*
 
 class EditFragment : Fragment() {
 
-    var callback: OnSaveCallback? = null
+    private var callback: OnSaveCallback? = null
     private var isModeAdd = false
     private var mainView: View? = null
     private var position: Int = 0
@@ -38,7 +39,7 @@ class EditFragment : Fragment() {
             isModeAdd = it.getBoolean(MODE_ADD)
             position = it.getInt(POSITION)
             if (!isModeAdd) {
-                habit = it.getParcelable<Habit>(HABIT)
+                habit = it.getParcelable(HABIT)
                 initEditMode(habit)
             }
         }
@@ -101,14 +102,17 @@ class EditFragment : Fragment() {
         val count = countTextField.text.toString().toInt()
         val periodicity = periodicityTextField.text.toString().toInt()
         callback?.onSave(
-            Habit(title, description, priority, isGood, count, periodicity),
+            Habit(
+                title,
+                description,
+                priority,
+                isGood,
+                count,
+                periodicity
+            ),
             isModeAdd,
             position,
             habit
         )
     }
-}
-
-interface OnSaveCallback {
-    fun onSave(habit: Habit, isModeAdd: Boolean, position: Int, initialHabit: Habit?)
 }

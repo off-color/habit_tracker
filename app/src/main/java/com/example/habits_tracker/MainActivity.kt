@@ -6,14 +6,18 @@ import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import com.example.habits_tracker.ui.Habit
+import com.example.habits_tracker.application.Habit
+import com.example.habits_tracker.ui.HabitsHolder
+import com.example.habits_tracker.ui.OnSaveCallback
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), OnSaveCallback, HabitsHolder {
+class MainActivity : AppCompatActivity(),
+    OnSaveCallback, HabitsHolder {
 
     companion object {
         private const val HABITS = "habits"
         private const val MAIN_FRAGMENT = "main_fragment"
+        private const val INFO_FRAGMENT = "info_fragment"
     }
 
     override var habits: MutableList<Habit> = mutableListOf()
@@ -23,7 +27,7 @@ class MainActivity : AppCompatActivity(), OnSaveCallback, HabitsHolder {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        configureNavigationDrawer()
+        configureNavigation()
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
@@ -59,10 +63,19 @@ class MainActivity : AppCompatActivity(), OnSaveCallback, HabitsHolder {
         if (drawerToggle?.onOptionsItemSelected(item) == true) {
             return true
         }
+
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+        }
+
         return super.onOptionsItemSelected(item)
     }
 
-    private fun configureNavigationDrawer() {
+    private fun configureNavigation() {
+        supportFragmentManager.addOnBackStackChangedListener {
+            drawerToggle?.isDrawerIndicatorEnabled = supportFragmentManager.backStackEntryCount == 0
+        }
+
         drawerToggle = ActionBarDrawerToggle(
             this,
             navigationDrawerLayout,
@@ -72,7 +85,10 @@ class MainActivity : AppCompatActivity(), OnSaveCallback, HabitsHolder {
             navigationDrawerLayout.addDrawerListener(this)
             syncState()
         }
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         navigationDrawer.setNavigationItemSelectedListener {
             onItemMenuSelect(it)
         }
@@ -89,6 +105,7 @@ class MainActivity : AppCompatActivity(), OnSaveCallback, HabitsHolder {
             R.id.menuItemInfo -> {
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.fragmentHolder, InfoFragment.newInstance())
+                    .addToBackStack(INFO_FRAGMENT)
                     .commit()
                 navigationDrawerLayout.closeDrawers()
                 true
@@ -116,6 +133,3 @@ class MainActivity : AppCompatActivity(), OnSaveCallback, HabitsHolder {
     }
 }
 
-interface HabitsHolder {
-    var habits: MutableList<Habit>
-}

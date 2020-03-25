@@ -3,6 +3,7 @@ package com.example.habits_tracker.ui
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.example.habits_tracker.R
+import com.example.habits_tracker.application.Habit
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.habit_layout.*
 
