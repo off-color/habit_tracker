@@ -1,12 +1,11 @@
 package com.example.habits_tracker
 
-import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.habits_tracker.application.Habit
+import com.example.habits_tracker.infrastructure.hideKeyboard
 import com.example.habits_tracker.ui.HabitsHolder
 import com.example.habits_tracker.ui.OnSaveCallback
 import kotlinx.android.synthetic.main.activity_main.*
@@ -112,17 +111,6 @@ class MainActivity : AppCompatActivity(),
             }
 
             else -> false
-        }
-    }
-
-    private fun hideKeyboard() {
-        val view = currentFocus
-        if (view != null) {
-            val inputManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputManager.hideSoftInputFromWindow(
-                view.windowToken,
-                InputMethodManager.HIDE_NOT_ALWAYS
-            )
         }
     }
 
