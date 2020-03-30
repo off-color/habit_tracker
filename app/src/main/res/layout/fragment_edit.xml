@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -12,109 +11,115 @@
         tools:context=".EditFragment">
 
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/defaultMargin"
             android:layout_width="@dimen/textInputWidth"
             android:layout_height="wrap_content"
-            android:hint="@string/titleHint"
-            style="@style/editFormElement">
+            android:hint="@string/titleHint">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/titleTextField"
+                style="@style/defaultPadding"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/labelElement"/>
+                android:layout_height="wrap_content" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/defaultMargin"
             android:layout_width="@dimen/textInputWidth"
-            android:layout_height="wrap_content"
-            style="@style/editFormElement">
+            android:layout_height="wrap_content">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/descriptionTextField"
+                style="@style/defaultPadding"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/descriptionHint"
-                style="@style/labelElement"/>
+                android:hint="@string/descriptionHint" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
+            style="@style/defaultPadding"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/priorityHint"
             android:layout_margin="8dp"
-            style="@style/labelElement"/>
+            android:text="@string/priorityHint" />
 
         <Spinner
             android:id="@+id/prioritySpinner"
+            style="@style/defaultMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:entries="@array/priorities"
-            style="@style/editFormElement"
             android:paddingStart="12dp"
-            android:paddingEnd="12dp"/>
+            android:paddingEnd="12dp" />
 
         <TextView
+            style="@style/defaultPadding"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/typeLabel"
             android:layout_margin="8dp"
-            style="@style/labelElement"/>
+            android:text="@string/typeLabel" />
 
         <RadioGroup
             android:id="@+id/typeRadioGroup"
+            style="@style/defaultMargin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checkedButton="@id/bad"
             android:orientation="vertical"
-            style="@style/editFormElement"
             android:paddingStart="12dp"
             android:paddingEnd="12dp">
+
             <RadioButton
                 android:id="@+id/good"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/good"/>
+                android:text="@string/good" />
+
             <RadioButton
                 android:id="@+id/bad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/bad"/>
+                android:text="@string/bad" />
         </RadioGroup>
 
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/defaultMargin"
             android:layout_width="@dimen/textInputWidth"
-            android:layout_height="wrap_content"
-            style="@style/editFormElement">
+            android:layout_height="wrap_content">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/countTextField"
+                style="@style/defaultPadding"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
                 android:hint="@string/countHint"
-                style="@style/labelElement"/>
+                android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/defaultMargin"
             android:layout_width="@dimen/textInputWidth"
-            android:layout_height="wrap_content"
-            style="@style/editFormElement">
+            android:layout_height="wrap_content">
+
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/periodicityTextField"
+                style="@style/defaultPadding"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
                 android:hint="@string/periodicityHint"
-                style="@style/labelElement"/>
+                android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/saveButton"
+            style="@style/defaultMargin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/save"
-            style="@style/editFormElement"/>
+            android:text="@string/save" />
 
     </LinearLayout>
 

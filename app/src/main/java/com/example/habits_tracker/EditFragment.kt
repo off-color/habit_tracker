@@ -8,21 +8,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.fragment.app.Fragment
-import com.example.habits_tracker.application.Habit
+import com.example.habits_tracker.domain.Habit
 import com.example.habits_tracker.ui.OnSaveCallback
+import com.example.habits_tracker.ui.view_models.EditViewModel
 import kotlinx.android.synthetic.main.fragment_edit.*
 
 class EditFragment : Fragment() {
 
-    private var callback: OnSaveCallback? = null
-    private var isModeAdd = false
     private var mainView: View? = null
-    private var position: Int = 0
-    private var habit: Habit? = null
+    private lateinit var editViewModel: EditViewModel
+    private lateinit var onSaveCallback: OnSaveCallback
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        callback = activity as OnSaveCallback
+        onSaveCallback = activity as OnSaveCallback
     }
 
     override fun onCreateView(
@@ -36,10 +35,10 @@ class EditFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         arguments?.let {
-            isModeAdd = it.getBoolean(MODE_ADD)
-            position = it.getInt(POSITION)
+            val isModeAdd = it.getBoolean(MODE_ADD)
+            val habit = it.getParcelable<Habit>(HABIT)
+            editViewModel = EditViewModel(isModeAdd, habit)
             if (!isModeAdd) {
-                habit = it.getParcelable(HABIT)
                 initEditMode(habit)
             }
         }
@@ -54,15 +53,13 @@ class EditFragment : Fragment() {
     companion object {
         private const val MODE_ADD = "mode_add"
         private const val HABIT = "habit"
-        private const val POSITION = "position"
 
         @JvmStatic
-        fun newInstance(isModeAdd: Boolean, habit: Habit? = null, position: Int = 0) =
+        fun newInstance(isModeAdd: Boolean, habit: Habit? = null) =
             EditFragment().apply {
                 arguments = Bundle().apply {
                     putBoolean(MODE_ADD, isModeAdd)
                     putParcelable(HABIT, habit)
-                    putInt(POSITION, position)
                 }
             }
     }
@@ -92,27 +89,16 @@ class EditFragment : Fragment() {
         return false
     }
 
-    private fun onSave() {
-        val title = titleTextField.text.toString()
-        val description = descriptionTextField.text.toString()
-        val priority = prioritySpinner.selectedItem.toString().toInt()
-        val isGood =
-            (mainView?.findViewById<RadioButton>(typeRadioGroup.checkedRadioButtonId)?.text.toString()
-                    == resources.getString(R.string.good))
-        val count = countTextField.text.toString().toInt()
-        val periodicity = periodicityTextField.text.toString().toInt()
-        callback?.onSave(
-            Habit(
-                title,
-                description,
-                priority,
-                isGood,
-                count,
-                periodicity
-            ),
-            isModeAdd,
-            position,
-            habit
-        )
+    private fun onSave() = Habit(
+        titleTextField.text.toString(),
+        descriptionTextField.text.toString(),
+        prioritySpinner.selectedItem.toString().toInt(),
+        (mainView?.findViewById<RadioButton>(typeRadioGroup.checkedRadioButtonId)?.text.toString()
+                == resources.getString(R.string.good)),
+        countTextField.text.toString().toInt(),
+        periodicityTextField.text.toString().toInt()
+    ).let {
+        editViewModel.saveHabit(it)
+        onSaveCallback.onSaveHabit()
     }
 }

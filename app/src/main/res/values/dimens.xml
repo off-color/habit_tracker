@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="editFormPadding">12dp</dimen>
-    <dimen name="editFormLayoutMargin">8dp</dimen>
+    <dimen name="defaultPadding">12dp</dimen>
+    <dimen name="defaultMargin">8dp</dimen>
     <dimen name="firstString">10sp</dimen>
     <dimen name="secondString">16sp</dimen>
     <dimen name="thirdString">14sp</dimen>
     <dimen name="baselineFromTop">28dp</dimen>
     <dimen name="textInputWidth">280dp</dimen>
     <dimen name="habitElementPadding">16dp</dimen>
+    <dimen name="bottomSheetTitleHeight">50dp</dimen>
 </resources>

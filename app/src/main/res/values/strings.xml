@@ -41,4 +41,8 @@
     <string name="email">ilya.vl.moskvin@gmail.com</string>
     <string name="goods">Хорошие</string>
     <string name="bads">Плохие</string>
+
+    <string name="bottomSheetTitle">Фильтры и сортировки</string>
+    <string name="sortLabel">Сортировать по приоритету</string>
+    <string name="searchHint">Найти</string>
 </resources>
