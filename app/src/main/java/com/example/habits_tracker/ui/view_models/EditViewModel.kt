@@ -13,13 +13,11 @@ class EditViewModel(
         if (isAdd) addHabit(habit) else editHabit(habit)
 
     private fun addHabit(habit: Habit) {
-        Model.habits.add(habit)
+        Model.addHabit(habit)
     }
 
     private fun editHabit(habit: Habit) {
-        val position = Model.habits.indexOf(initialHabit)
-        if (position >= 0)
-            Model.habits[position] = habit
+        initialHabit?.let { Model.editHabit(habit, it) }
     }
 
 }

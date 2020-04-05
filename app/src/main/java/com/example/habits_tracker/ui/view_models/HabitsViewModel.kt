@@ -8,37 +8,45 @@ import com.example.habits_tracker.domain.Habit
 import com.example.habits_tracker.infrastructure.Sorting
 
 class HabitsViewModel : ViewModel() {
-    private val mutableHabits: MutableLiveData<List<Habit>> = MutableLiveData()
-    private var filter = ""
-    private var sorting = Sorting.NotSorted
+    private val mutableFilterLiveData: MutableLiveData<String> = MutableLiveData()
+    private val mutableSortingLiveData: MutableLiveData<Sorting> = MutableLiveData()
 
-    val habits: LiveData<List<Habit>> = mutableHabits
+    val filterLiveData: LiveData<String> = mutableFilterLiveData
+    val sortingLiveData: LiveData<Sorting> = mutableSortingLiveData
+
+    val habits: LiveData<List<Habit>> = Model.getAllHabits()
 
     init {
-        mutableHabits.value = Model.habits
+        mutableFilterLiveData.value = ""
+        mutableSortingLiveData.value = Sorting.NotSorted
     }
 
-    fun getFilteredHabits(isGood: Boolean) =
-        habits.value?.filter { it.isGood == isGood } ?: listOf()
-
     fun filterHabitsBySubstring(string: String) {
-        val sortedHabits = getSortedHabits(Model.habits)
-        filter = string
-        mutableHabits.value = getFilteredHabits(sortedHabits)
+        mutableFilterLiveData.value = string
     }
 
     fun sortHabitsByPriority(isDescending: Boolean) {
-        val filteredHabits = getFilteredHabits(Model.habits)
-        sorting = if (isDescending) Sorting.SortedByDescending else Sorting.Sorted
-        mutableHabits.value = getSortedHabits(filteredHabits)
+        mutableSortingLiveData.value =
+            if (isDescending) Sorting.SortedByDescending else Sorting.Sorted
     }
 
     fun resetSorting() {
-        sorting = Sorting.NotSorted
-        mutableHabits.value = getFilteredHabits(Model.habits)
+        mutableSortingLiveData.value = Sorting.NotSorted
     }
 
-    private fun getSortedHabits(habits: List<Habit>): List<Habit> {
+    fun getSortedAndFilteredHabits(
+        isGood: Boolean,
+        filter: String?,
+        sorting: Sorting?
+    ): List<Habit> {
+        val filteredByType = habits.value?.filter { it.isGood == isGood } ?: listOf()
+        return getSortedHabits(
+            getFilteredHabits(filteredByType, filter ?: ""),
+            sorting ?: Sorting.NotSorted
+        )
+    }
+
+    private fun getSortedHabits(habits: List<Habit>, sorting: Sorting): List<Habit> {
         return when (sorting) {
             Sorting.NotSorted -> habits
             Sorting.Sorted -> habits.sortedBy { habit -> habit.priority }
@@ -46,7 +54,7 @@ class HabitsViewModel : ViewModel() {
         }
     }
 
-    private fun getFilteredHabits(habits: List<Habit>): List<Habit> {
+    private fun getFilteredHabits(habits: List<Habit>, filter: String): List<Habit> {
         return if (filter.isEmpty()) habits
         else habits.filter { it.title.contains(filter) }
     }

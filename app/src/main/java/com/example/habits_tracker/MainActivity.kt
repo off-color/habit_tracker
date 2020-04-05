@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.room.Room
+import com.example.habits_tracker.application.AppDatabase
+import com.example.habits_tracker.application.Model
 import com.example.habits_tracker.infrastructure.hideKeyboard
 import com.example.habits_tracker.ui.OnSaveCallback
 import kotlinx.android.synthetic.main.activity_main.*
@@ -24,6 +27,9 @@ class MainActivity : AppCompatActivity(), OnSaveCallback {
         configureNavigation()
 
         if (savedInstanceState == null) {
+            Model.appDatabase =
+                Room.databaseBuilder(applicationContext, AppDatabase::class.java, "HabitReader")
+                    .allowMainThreadQueries().build()
             supportFragmentManager.beginTransaction()
                 .add(R.id.fragmentHolder, MainFragment.newInstance(), MAIN_FRAGMENT).commit()
         }

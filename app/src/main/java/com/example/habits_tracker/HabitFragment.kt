@@ -39,10 +39,28 @@ class HabitFragment : Fragment() {
             getBoolean(IS_GOOD)
         } ?: false
 
+        habitsViewModel.filterLiveData.observe(viewLifecycleOwner, Observer {
+            (habitsRecyclerView.adapter as HabitsAdapter).setData(
+                habitsViewModel.getSortedAndFilteredHabits(
+                    isGood, it, habitsViewModel.sortingLiveData.value
+                )
+            )
+        })
+
+        habitsViewModel.sortingLiveData.observe(viewLifecycleOwner, Observer {
+            (habitsRecyclerView.adapter as HabitsAdapter).setData(
+                habitsViewModel.getSortedAndFilteredHabits(
+                    isGood, habitsViewModel.filterLiveData.value, it
+                )
+            )
+        })
+
         habitsViewModel.habits.observe(viewLifecycleOwner, Observer {
             (habitsRecyclerView.adapter as HabitsAdapter).setData(
-                habitsViewModel.getFilteredHabits(
-                    isGood
+                habitsViewModel.getSortedAndFilteredHabits(
+                    isGood,
+                    habitsViewModel.filterLiveData.value,
+                    habitsViewModel.sortingLiveData.value
                 )
             )
         })
