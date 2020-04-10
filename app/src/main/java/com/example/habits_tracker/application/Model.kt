@@ -6,7 +6,7 @@ object Model {
 
     lateinit var appDatabase: AppDatabase
 
-    fun getAllHabits() = appDatabase.habitDao().getAll()
+    fun getAllHabits() = appDatabase.habitDao().getAllHabits()
 
     fun addHabit(habit: Habit) {
         appDatabase.habitDao().insertHabit(habit)

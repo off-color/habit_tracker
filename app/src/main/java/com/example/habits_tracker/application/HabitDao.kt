@@ -10,7 +10,7 @@ import com.example.habits_tracker.domain.Habit
 @Dao
 interface HabitDao {
     @Query("SELECT * FROM habit")
-    fun getAll(): LiveData<List<Habit>>
+    fun getAllHabits(): LiveData<List<Habit>>
 
     @Insert
     fun insertHabit(habit: Habit)

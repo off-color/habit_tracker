@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity(), OnSaveCallback {
         if (savedInstanceState == null) {
             Model.appDatabase =
                 Room.databaseBuilder(applicationContext, AppDatabase::class.java, "HabitReader")
-                    .allowMainThreadQueries().build()
+                    .build()
             supportFragmentManager.beginTransaction()
                 .add(R.id.fragmentHolder, MainFragment.newInstance(), MAIN_FRAGMENT).commit()
         }
