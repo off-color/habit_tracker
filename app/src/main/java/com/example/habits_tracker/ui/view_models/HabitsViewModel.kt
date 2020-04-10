@@ -2,23 +2,23 @@ package com.example.habits_tracker.ui.view_models
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.habits_tracker.application.Model
 import com.example.habits_tracker.domain.Habit
+import com.example.habits_tracker.infrastructure.DoubleLiveData
 import com.example.habits_tracker.infrastructure.Sorting
 
 class HabitsViewModel : ViewModel() {
-    private val mutableFilterLiveData: MutableLiveData<String> = MutableLiveData()
     private val mutableSortingLiveData: MutableLiveData<Sorting> = MutableLiveData()
+    private val mutableFilterLiveData: MutableLiveData<String> = MutableLiveData()
 
-    val filterLiveData: LiveData<String> = mutableFilterLiveData
-    val sortingLiveData: LiveData<Sorting> = mutableSortingLiveData
-
-    val habits: LiveData<List<Habit>> = Model.getAllHabits()
+    var goodHabits: LiveData<List<Habit>> = constructHabitsLiveData(true)
+    var badHabits: LiveData<List<Habit>> = constructHabitsLiveData(false)
 
     init {
-        mutableFilterLiveData.value = ""
         mutableSortingLiveData.value = Sorting.NotSorted
+        mutableFilterLiveData.value = ""
     }
 
     fun filterHabitsBySubstring(string: String) {
@@ -34,28 +34,14 @@ class HabitsViewModel : ViewModel() {
         mutableSortingLiveData.value = Sorting.NotSorted
     }
 
-    fun getSortedAndFilteredHabits(
-        isGood: Boolean,
-        filter: String?,
-        sorting: Sorting?
-    ): List<Habit> {
-        val filteredByType = habits.value?.filter { it.isGood == isGood } ?: listOf()
-        return getSortedHabits(
-            getFilteredHabits(filteredByType, filter ?: ""),
-            sorting ?: Sorting.NotSorted
-        )
-    }
-
-    private fun getSortedHabits(habits: List<Habit>, sorting: Sorting): List<Habit> {
-        return when (sorting) {
-            Sorting.NotSorted -> habits
-            Sorting.Sorted -> habits.sortedBy { habit -> habit.priority }
-            Sorting.SortedByDescending -> habits.sortedByDescending { habit -> habit.priority }
+    private fun constructHabitsLiveData(isGood: Boolean) =
+        Transformations.switchMap(
+            DoubleLiveData(
+                mutableSortingLiveData,
+                mutableFilterLiveData
+            )
+        ) {
+            Model.getFilteredAndSortedHabits(isGood, it.second ?: "", it.first ?: Sorting.NotSorted)
         }
-    }
 
-    private fun getFilteredHabits(habits: List<Habit>, filter: String): List<Habit> {
-        return if (filter.isEmpty()) habits
-        else habits.filter { it.title.contains(filter) }
-    }
 }

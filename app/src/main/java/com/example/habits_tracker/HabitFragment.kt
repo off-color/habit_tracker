@@ -39,29 +39,11 @@ class HabitFragment : Fragment() {
             getBoolean(IS_GOOD)
         } ?: false
 
-        habitsViewModel.filterLiveData.observe(viewLifecycleOwner, Observer {
-            (habitsRecyclerView.adapter as HabitsAdapter).setData(
-                habitsViewModel.getSortedAndFilteredHabits(
-                    isGood, it, habitsViewModel.sortingLiveData.value
-                )
-            )
-        })
+        val habits = if (isGood) habitsViewModel.goodHabits else habitsViewModel.badHabits
 
-        habitsViewModel.sortingLiveData.observe(viewLifecycleOwner, Observer {
+        habits.observe(viewLifecycleOwner, Observer {
             (habitsRecyclerView.adapter as HabitsAdapter).setData(
-                habitsViewModel.getSortedAndFilteredHabits(
-                    isGood, habitsViewModel.filterLiveData.value, it
-                )
-            )
-        })
-
-        habitsViewModel.habits.observe(viewLifecycleOwner, Observer {
-            (habitsRecyclerView.adapter as HabitsAdapter).setData(
-                habitsViewModel.getSortedAndFilteredHabits(
-                    isGood,
-                    habitsViewModel.filterLiveData.value,
-                    habitsViewModel.sortingLiveData.value
-                )
+                it
             )
         })
     }
