@@ -18,6 +18,11 @@ class EditViewModel(
         if (isAdd) addHabit(habit) else editHabit(habit)
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        coroutineContext.cancelChildren()
+    }
+
     private fun addHabit(habit: Habit) = launch {
         Model.addHabit(habit)
     }
