@@ -49,7 +49,7 @@ class HabitFragment : Fragment() {
     }
 
     private fun configureRecyclerView() {
-        habitsRecyclerView.adapter = HabitsAdapter(listOf(), object :
+        habitsRecyclerView.adapter = HabitsAdapter(object :
             OnItemClickListener {
             override fun onItemClick(habit: Habit) {
                 val fragment = EditFragment.newInstance(false, habit)

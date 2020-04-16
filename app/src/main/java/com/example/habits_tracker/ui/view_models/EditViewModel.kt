@@ -1,34 +1,28 @@
 package com.example.habits_tracker.ui.view_models
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.habits_tracker.application.Model
 import com.example.habits_tracker.domain.Habit
-import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class EditViewModel(
     private val isAdd: Boolean,
     private val initialHabit: Habit?
-) : ViewModel(), CoroutineScope {
-
-    override val coroutineContext: CoroutineContext
-        get() = Dispatchers.IO + SupervisorJob() + CoroutineExceptionHandler { _, throwable -> throw throwable }
+) : ViewModel() {
 
     fun saveHabit(habit: Habit) {
         if (isAdd) addHabit(habit) else editHabit(habit)
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        coroutineContext.cancelChildren()
+    private fun addHabit(habit: Habit) = viewModelScope.launch {
+        withContext(Dispatchers.IO) { Model.addHabit(habit) }
     }
 
-    private fun addHabit(habit: Habit) = launch {
-        Model.addHabit(habit)
-    }
-
-    private fun editHabit(habit: Habit) = launch {
-        initialHabit?.let { Model.editHabit(habit, it) }
+    private fun editHabit(habit: Habit) = viewModelScope.launch {
+        withContext(Dispatchers.IO) { initialHabit?.let { Model.editHabit(habit, it) } }
     }
 
 }

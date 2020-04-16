@@ -2,16 +2,15 @@ package com.example.habits_tracker.ui.view_holder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
 import com.example.habits_tracker.R
 import com.example.habits_tracker.domain.Habit
 import com.example.habits_tracker.ui.OnItemClickListener
 
 
 class HabitsAdapter(
-    private var habits: List<Habit>, private val listener: OnItemClickListener
-) : RecyclerView.Adapter<HabitsViewHolder>() {
+    private val listener: OnItemClickListener
+) : ListAdapter<Habit, HabitsViewHolder>(HabitDiffUtilCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -20,15 +19,10 @@ class HabitsAdapter(
         )
     }
 
-    override fun getItemCount() = habits.size
-
     override fun onBindViewHolder(holder: HabitsViewHolder, position: Int) =
-        holder.bind(habits[position], listener)
+        holder.bind(getItem(position), listener)
 
     fun setData(habits: List<Habit>) {
-        val postDiffCallback = HabitDiffUtilCallback(this.habits, habits)
-        val diffResult = DiffUtil.calculateDiff(postDiffCallback)
-        this.habits = habits
-        diffResult.dispatchUpdatesTo(this)
+        submitList(habits.toMutableList())
     }
 }

@@ -6,42 +6,47 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.habits_tracker.application.Model
 import com.example.habits_tracker.domain.Habit
-import com.example.habits_tracker.infrastructure.DoubleLiveData
 import com.example.habits_tracker.infrastructure.Sorting
+import com.example.habits_tracker.ui.FilterParameters
 
 class HabitsViewModel : ViewModel() {
-    private val mutableSortingLiveData: MutableLiveData<Sorting> = MutableLiveData()
-    private val mutableFilterLiveData: MutableLiveData<String> = MutableLiveData()
+    private val filterParametersLiveData: MutableLiveData<FilterParameters> = MutableLiveData()
 
     var goodHabits: LiveData<List<Habit>> = constructHabitsLiveData(true)
     var badHabits: LiveData<List<Habit>> = constructHabitsLiveData(false)
 
     init {
-        mutableSortingLiveData.value = Sorting.NotSorted
-        mutableFilterLiveData.value = ""
+        filterParametersLiveData.value = FilterParameters("", Sorting.NotSorted)
     }
 
     fun filterHabitsBySubstring(string: String) {
-        mutableFilterLiveData.value = string
+        filterParametersLiveData.value =
+            FilterParameters(string, filterParametersLiveData.value?.sorting ?: Sorting.NotSorted)
     }
 
     fun sortHabitsByPriority(isDescending: Boolean) {
-        mutableSortingLiveData.value =
+        filterParametersLiveData.value = FilterParameters(
+            filterParametersLiveData.value?.stringFilter ?: "",
             if (isDescending) Sorting.SortedByDescending else Sorting.Sorted
+        )
     }
 
     fun resetSorting() {
-        mutableSortingLiveData.value = Sorting.NotSorted
+        filterParametersLiveData.value = FilterParameters(
+            filterParametersLiveData.value?.stringFilter ?: "",
+            Sorting.NotSorted
+        )
     }
 
     private fun constructHabitsLiveData(isGood: Boolean) =
         Transformations.switchMap(
-            DoubleLiveData(
-                mutableSortingLiveData,
-                mutableFilterLiveData
-            )
+            filterParametersLiveData
         ) {
-            Model.getFilteredAndSortedHabits(isGood, it.second ?: "", it.first ?: Sorting.NotSorted)
+            Model.getFilteredAndSortedHabits(
+                isGood,
+                it.stringFilter ?: "",
+                it.sorting ?: Sorting.NotSorted
+            )
         }
 
 }
