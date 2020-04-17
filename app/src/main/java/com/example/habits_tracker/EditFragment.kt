@@ -2,13 +2,14 @@ package com.example.habits_tracker
 
 import android.content.Context
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.fragment.app.Fragment
 import com.example.habits_tracker.domain.Habit
+import com.example.habits_tracker.infrastructure.isTextFieldsFilled
+import com.example.habits_tracker.infrastructure.showNoTextProvidedError
 import com.example.habits_tracker.ui.OnSaveCallback
 import com.example.habits_tracker.ui.view_models.EditViewModel
 import kotlinx.android.synthetic.main.fragment_edit.*
@@ -44,9 +45,16 @@ class EditFragment : Fragment() {
         }
 
         saveButton.setOnClickListener {
-            if (allFieldsFilled()) {
-                onSave()
-            }
+            if (isTextFieldsFilled(
+                    titleTextField,
+                    countTextField,
+                    periodicityTextField
+                )
+            ) onSave() else showNoTextProvidedError(
+                titleTextField,
+                countTextField,
+                periodicityTextField
+            )
         }
     }
 
@@ -73,20 +81,6 @@ class EditFragment : Fragment() {
             countTextField.setText(habit.count.toString())
             periodicityTextField.setText(habit.periodicity.toString())
         }
-    }
-
-    private fun allFieldsFilled(): Boolean {
-        val requiredTextViews = listOf(
-            titleTextField, countTextField, periodicityTextField
-        )
-        if (requiredTextViews.all { !TextUtils.isEmpty(it.text) }) {
-            return true
-        }
-        requiredTextViews.first { TextUtils.isEmpty(it.text) }.apply {
-            error = "Обязательно к заполнению"
-            requestFocus()
-        }
-        return false
     }
 
     private fun onSave() = Habit(
