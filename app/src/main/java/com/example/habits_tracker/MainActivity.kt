@@ -5,8 +5,9 @@ import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.room.Room
-import com.example.habits_tracker.application.AppDatabase
-import com.example.habits_tracker.application.Model
+import com.example.habits_tracker.application.database.AppDatabase
+import com.example.habits_tracker.application.database.DatabaseRepository
+import com.example.habits_tracker.application.network.ServerRepository
 import com.example.habits_tracker.infrastructure.hideKeyboard
 import com.example.habits_tracker.ui.OnSaveCallback
 import kotlinx.android.synthetic.main.activity_main.*
@@ -16,6 +17,7 @@ class MainActivity : AppCompatActivity(), OnSaveCallback {
     companion object {
         private const val MAIN_FRAGMENT = "main_fragment"
         private const val INFO_FRAGMENT = "info_fragment"
+        private const val BACKUP_FRAGMENT = "backup_fragment"
     }
 
     private var drawerToggle: ActionBarDrawerToggle? = null
@@ -27,9 +29,10 @@ class MainActivity : AppCompatActivity(), OnSaveCallback {
         configureNavigation()
 
         if (savedInstanceState == null) {
-            Model.appDatabase =
+            DatabaseRepository.appDatabase =
                 Room.databaseBuilder(applicationContext, AppDatabase::class.java, "HabitReader")
                     .build()
+            ServerRepository.context = applicationContext
             supportFragmentManager.beginTransaction()
                 .add(R.id.fragmentHolder, MainFragment.newInstance(), MAIN_FRAGMENT).commit()
         }
@@ -90,6 +93,15 @@ class MainActivity : AppCompatActivity(), OnSaveCallback {
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.fragmentHolder, InfoFragment.newInstance())
                     .addToBackStack(INFO_FRAGMENT)
+                    .commit()
+                navigationDrawerLayout.closeDrawers()
+                true
+            }
+
+            R.id.menuItemBackup -> {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragmentHolder, BackupFragment.newInstance())
+                    .addToBackStack(BACKUP_FRAGMENT)
                     .commit()
                 navigationDrawerLayout.closeDrawers()
                 true

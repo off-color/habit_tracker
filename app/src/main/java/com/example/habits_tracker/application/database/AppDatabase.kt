@@ -1,4 +1,4 @@
-package com.example.habits_tracker.application
+package com.example.habits_tracker.application.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

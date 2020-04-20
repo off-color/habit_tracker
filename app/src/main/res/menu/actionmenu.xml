@@ -9,4 +9,9 @@
         android:id="@+id/menuItemInfo"
         android:title="@string/info"
         android:icon="@drawable/ic_info"/>
+
+    <item
+        android:id="@+id/menuItemBackup"
+        android:title="@string/backupTitle"
+        android:icon="@drawable/ic_backup"/>
 </menu>
