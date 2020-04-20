@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.habits_tracker.application.Model
+import com.example.habits_tracker.application.database.DatabaseRepository
 import com.example.habits_tracker.domain.Habit
 import com.example.habits_tracker.infrastructure.Sorting
 import com.example.habits_tracker.ui.FilterParameters
@@ -42,7 +43,7 @@ class HabitsViewModel : ViewModel() {
         Transformations.switchMap(
             filterParametersLiveData
         ) {
-            Model.getFilteredAndSortedHabits(
+            DatabaseRepository.getFilteredAndSortedHabits(
                 isGood,
                 it.stringFilter ?: "",
                 it.sorting ?: Sorting.NotSorted

@@ -11,9 +11,13 @@ import kotlinx.android.parcel.Parcelize
 data class Habit(
     val title: String, val description: String,
     val priority: Int, val isGood: Boolean,
-    val count: Int, val periodicity: Int
+    val count: Int, val periodicity: Int,
+    val date: Long
 ) : Parcelable {
     @IgnoredOnParcel
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null
+
+    @IgnoredOnParcel
+    var serverId: String? = null
 }

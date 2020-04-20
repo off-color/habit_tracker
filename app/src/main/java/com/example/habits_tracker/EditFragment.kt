@@ -13,6 +13,7 @@ import com.example.habits_tracker.infrastructure.showNoTextProvidedError
 import com.example.habits_tracker.ui.OnSaveCallback
 import com.example.habits_tracker.ui.view_models.EditViewModel
 import kotlinx.android.synthetic.main.fragment_edit.*
+import java.util.*
 
 class EditFragment : Fragment() {
 
@@ -47,11 +48,13 @@ class EditFragment : Fragment() {
         saveButton.setOnClickListener {
             if (isTextFieldsFilled(
                     titleTextField,
+                    descriptionTextField,
                     countTextField,
                     periodicityTextField
                 )
             ) onSave() else showNoTextProvidedError(
                 titleTextField,
+                descriptionTextField,
                 countTextField,
                 periodicityTextField
             )
@@ -90,7 +93,8 @@ class EditFragment : Fragment() {
         (mainView?.findViewById<RadioButton>(typeRadioGroup.checkedRadioButtonId)?.text.toString()
                 == resources.getString(R.string.good)),
         countTextField.text.toString().toInt(),
-        periodicityTextField.text.toString().toInt()
+        periodicityTextField.text.toString().toInt(),
+        Date().time
     ).let {
         editViewModel.saveHabit(it)
         onSaveCallback.onSaveHabit()

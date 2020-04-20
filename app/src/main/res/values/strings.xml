@@ -43,4 +43,14 @@
     <string name="bottomSheetTitle">Фильтры и сортировки</string>
     <string name="sortLabel">Сортировать по приоритету</string>
     <string name="searchHint">Найти</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="downloadLabel">Загрузить привычки с сервера</string>
+    <string name="uploadLabel">Выгрузить привычки на сервер</string>
+    <string name="backupTitle">Загрузка/выгрузка привычек</string>
+    <string name="apiToken">6dc67604-1dff-4217-ad52-146136ef24de</string>
+    <string name="backupDone">Готово</string>
+    <string name="backupFailed">Не вышло</string>
+    <string name="shouldBeFilled">Обязательно к заполнению</string>
 </resources>
