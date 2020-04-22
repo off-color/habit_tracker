@@ -22,6 +22,8 @@ object Model {
         }
         val habitsFromDatabase = habitsFromDatabaseDeferred.await()
         for (habit in habitsFromDatabase) {
+            if (habit.lastChangedOnServer == habit.date)
+                continue
             val response = ServerRepository.updateHabitOnServer(habit)
             if (response.isSuccessful && habit.serverId == null) {
                 habit.serverId = response.body()?.get("uid")?.asString

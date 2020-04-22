@@ -23,6 +23,7 @@ class HabitJsonDeserializer : JsonDeserializer<Habit> {
             jsonObject.get("date").asLong
         )
         result.serverId = jsonObject.get("uid").asString
+        result.lastChangedOnServer = jsonObject.get("date").asLong
         return result
     }
 }

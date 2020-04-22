@@ -20,4 +20,7 @@ data class Habit(
 
     @IgnoredOnParcel
     var serverId: String? = null
+
+    @IgnoredOnParcel
+    var lastChangedOnServer: Long = 0
 }
