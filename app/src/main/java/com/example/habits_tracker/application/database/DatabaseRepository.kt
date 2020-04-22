@@ -27,6 +27,7 @@ object DatabaseRepository {
     fun editHabit(habit: Habit, initialHabit: Habit) {
         habit.id = initialHabit.id
         habit.serverId = initialHabit.serverId
+        habit.lastChangedOnServer = initialHabit.lastChangedOnServer
         appDatabase.habitDao().updateHabit(habit)
     }
 
