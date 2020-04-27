@@ -12,23 +12,21 @@ object Model {
         val habitsFromServerDeferred = async {
             ServerRepository.getAllHabitsFromServer()
         }
-        val habitsFromServer = habitsFromServerDeferred.await()
-        DatabaseRepository.updateAllHabits(habitsFromServer)
-    }
+        val habitsFromServer = habitsFromServerDeferred.await() ?: return@withContext
 
-    suspend fun updateServerFromDatabase() = withContext(Dispatchers.IO) {
-        val habitsFromDatabaseDeferred = async {
-            DatabaseRepository.getAllHabits()
-        }
-        val habitsFromDatabase = habitsFromDatabaseDeferred.await()
-        for (habit in habitsFromDatabase) {
-            if (habit.lastChangedOnServer == habit.date)
-                continue
-            val response = ServerRepository.updateHabitOnServer(habit)
-            if (response.isSuccessful && habit.serverId == null) {
-                habit.serverId = response.body()?.get("uid")?.asString
-                DatabaseRepository.updateHabit(habit)
+        for (habit in habitsFromServer) {
+            val serverId = habit.serverId
+            if (serverId != null) {
+                val ids = DatabaseRepository.getIdsByServerId(serverId)
+                when (ids.size) {
+                    0 -> DatabaseRepository.addHabit(habit)
+                    else -> {
+                        habit.id = ids[0]
+                        DatabaseRepository.updateHabit(habit)
+                    }
+                }
             }
         }
     }
+
 }

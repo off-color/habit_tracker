@@ -16,11 +16,8 @@ data class Habit(
 ) : Parcelable {
     @IgnoredOnParcel
     @PrimaryKey(autoGenerate = true)
-    var id: Int? = null
+    var id: Long? = null
 
     @IgnoredOnParcel
     var serverId: String? = null
-
-    @IgnoredOnParcel
-    var lastChangedOnServer: Long = 0
 }
