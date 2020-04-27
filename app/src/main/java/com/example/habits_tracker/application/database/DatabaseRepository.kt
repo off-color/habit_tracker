@@ -1,6 +1,5 @@
 package com.example.habits_tracker.application.database
 
-import com.example.habits_tracker.application.Model
 import com.example.habits_tracker.domain.Habit
 import com.example.habits_tracker.infrastructure.Sorting
 
@@ -20,25 +19,13 @@ object DatabaseRepository {
             .getFilteredAndSortedByDescendingHabits(isGood, filter)
     }
 
-    fun addHabit(habit: Habit) {
-        appDatabase.habitDao().insertHabit(habit)
-    }
-
-    fun editHabit(habit: Habit, initialHabit: Habit) {
-        habit.id = initialHabit.id
-        habit.serverId = initialHabit.serverId
-        habit.lastChangedOnServer = initialHabit.lastChangedOnServer
-        appDatabase.habitDao().updateHabit(habit)
-    }
-
-    fun updateAllHabits(newHabits: List<Habit>) {
-        appDatabase.habitDao().updateAllHabits(newHabits)
-    }
-
-    fun getAllHabits() = appDatabase.habitDao().getAllHabits()
+    fun addHabit(habit: Habit) = appDatabase.habitDao().insertHabit(habit)
 
     fun updateHabit(habit: Habit) {
         appDatabase.habitDao().updateHabit(habit)
     }
+
+    fun getIdsByServerId(serverId: String) =
+        appDatabase.habitDao().getIdByServerId(serverId)
 
 }

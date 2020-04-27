@@ -1,14 +1,13 @@
 package com.example.habits_tracker.ui.view_models
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.example.habits_tracker.application.Model
 import com.example.habits_tracker.application.database.DatabaseRepository
 import com.example.habits_tracker.domain.Habit
 import com.example.habits_tracker.infrastructure.Sorting
 import com.example.habits_tracker.ui.FilterParameters
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class HabitsViewModel : ViewModel() {
     private val filterParametersLiveData: MutableLiveData<FilterParameters> = MutableLiveData()
@@ -18,6 +17,9 @@ class HabitsViewModel : ViewModel() {
 
     init {
         filterParametersLiveData.value = FilterParameters("", Sorting.NotSorted)
+        viewModelScope.launch(Dispatchers.IO) {
+            Model.updateDatabaseFromServer()
+        }
     }
 
     fun filterHabitsBySubstring(string: String) {
@@ -45,8 +47,8 @@ class HabitsViewModel : ViewModel() {
         ) {
             DatabaseRepository.getFilteredAndSortedHabits(
                 isGood,
-                it.stringFilter ?: "",
-                it.sorting ?: Sorting.NotSorted
+                it.stringFilter,
+                it.sorting
             )
         }
 

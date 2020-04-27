@@ -7,15 +7,6 @@ import com.example.habits_tracker.domain.Habit
 @Dao
 interface HabitDao {
 
-    @Query("SELECT * FROM habit")
-    fun getAllHabits(): List<Habit>
-
-    @Transaction
-    fun updateAllHabits(habits: List<Habit>) {
-        deleteAllHabits()
-        insertAllHabits(habits)
-    }
-
     @Query("SELECT * FROM habit WHERE isGood = :isGood AND title LIKE :filter || '%'")
     fun getFilteredHabits(isGood: Boolean, filter: String): LiveData<List<Habit>>
 
@@ -32,14 +23,11 @@ interface HabitDao {
     ): LiveData<List<Habit>>
 
     @Insert
-    fun insertHabit(habit: Habit)
-
-    @Insert
-    fun insertAllHabits(habits: List<Habit>)
+    fun insertHabit(habit: Habit): Long
 
     @Update
     fun updateHabit(habit: Habit)
 
-    @Query("DELETE FROM habit")
-    fun deleteAllHabits()
+    @Query("SELECT id FROM habit WHERE serverId = :serverId")
+    fun getIdByServerId(serverId: String): List<Long>
 }

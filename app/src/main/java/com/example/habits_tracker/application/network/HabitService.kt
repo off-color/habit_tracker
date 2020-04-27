@@ -10,7 +10,7 @@ import retrofit2.http.PUT
 
 interface HabitService {
     @GET("habit")
-    suspend fun habitsList(@Header("Authorization") authorization: String): List<Habit>
+    suspend fun habitsList(@Header("Authorization") authorization: String): Response<List<Habit>>
 
     @PUT("habit")
     suspend fun putHabit(
